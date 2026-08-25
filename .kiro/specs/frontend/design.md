@@ -1,26 +1,48 @@
-# FRONTEND — Diseño Técnico Detallado + Sistema Responsive
+# FRONTEND — Diseño Técnico + Responsive + Paleta Temática
 
 **Proyecto:** Casanare en Movimiento  
 **Tecnología:** React 18 + JavaScript + Vite + Tailwind CSS  
-**Versión:** 2.0 — Mobile-First
+**Versión:** 3.0 — Flujos diferenciados por rol + Mobile-First
 
 ---
 
-## 1. Sistema de Breakpoints
+## 1. Paleta de Colores — Temática de Eventos Casanare
 
-La estrategia es **mobile-first**: los estilos base aplican a móvil y se escalan hacia arriba con modificadores de Tailwind.
+La paleta se inspira en la identidad visual del departamento: los llanos orientales,
+el amanecer sobre el río Meta, las fiestas culturales y la naturaleza exuberante.
 
 ```
-xs  →  < 320px   (móviles pequeños — edge case)
-sm  →  320px      Base móvil — DISEÑO PRIMARIO
-md  →  768px      Tablet
-lg  →  1024px     Laptop
-xl  →  1280px     Desktop
-2xl →  1536px     Desktop grande
+┌──────────────────────────────────────────────────────────────────────────┐
+│                        PALETA PRINCIPAL                                   │
+│                                                                           │
+│  VERDE LLANO       DORADO AMANECER    TIERRA CASANARE   CIELO SABANA     │
+│  #1B7A3E           #E8A020            #8B4513           #4A90D9          │
+│  Verde oscuro      Naranja dorado     Marrón tierra     Azul cielo       │
+│  Naturaleza,       Amanecer llanero,  Tradición,        Río Meta,        │
+│  CTA primarios     acentos cálidos    raíces            tranquilidad     │
+│                                                                           │
+│  FONDO CLARO       TEXTO OSCURO       ÉXITO             ERROR            │
+│  #F9F5EE           #1C1C1E            #16A34A           #DC2626          │
+│  Beige suave       Casi negro         Verde menta       Rojo alerta      │
+│  Fondo de página   Texto principal    Confirmaciones    Errores          │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
-Configuración en `tailwind.config.js`:
+### Colores por Categoría de Evento
+
+```
+Cultural     → Morado       #7C3AED  bg-purple-700  (arte, música, tradición)
+Deportivo    → Azul         #1D4ED8  bg-blue-700    (deporte, competencia)
+Turístico    → Verde agua   #0D9488  bg-teal-600    (naturaleza, viaje)
+Gastronómico → Naranja      #EA580C  bg-orange-600  (comida, sabor)
+Otro         → Gris         #374151  bg-gray-700    (general)
+```
+
+### tailwind.config.js — Configuración Completa
+
 ```javascript
+const colors = require('tailwindcss/colors');
+
 module.exports = {
   content: ['./src/**/*.{js,jsx}'],
   theme: {
@@ -33,22 +55,127 @@ module.exports = {
     },
     extend: {
       colors: {
-        primary:   { DEFAULT: '#16A34A', light: '#22C55E', dark: '#15803D' },
-        secondary: { DEFAULT: '#D97706', light: '#F59E0B', dark: '#B45309' },
-        neutral:   { DEFAULT: '#374151', light: '#6B7280', dark: '#111827' },
+        // Marca principal
+        primary: {
+          50:      '#F0FAF4',
+          100:     '#D1F7E0',
+          200:     '#A3EFC1',
+          300:     '#6DDEA0',
+          400:     '#3EC87D',
+          DEFAULT: '#1B7A3E',   // Verde llano — acciones principales
+          600:     '#166332',
+          700:     '#114D27',
+          800:     '#0C371C',
+          900:     '#072212',
+        },
+        // Acento cálido
+        golden: {
+          50:      '#FFF9EC',
+          100:     '#FEF0C7',
+          200:     '#FEDD89',
+          300:     '#FEC84B',
+          DEFAULT: '#E8A020',   // Dorado amanecer — badges, highlights
+          500:     '#C9891A',
+          600:     '#A97215',
+        },
+        // Tierra
+        earth: {
+          DEFAULT: '#8B4513',   // Marrón tierra — detalles decorativos
+          light:   '#C4844A',
+          dark:    '#5C2D0D',
+        },
+        // Cielo
+        sky: {
+          DEFAULT: '#4A90D9',   // Azul cielo — info, links
+          light:   '#7BB3E8',
+          dark:    '#2C6BAA',
+        },
+        // Fondo
+        sand: {
+          DEFAULT: '#F9F5EE',   // Beige arena — fondo de página
+          dark:    '#EDE8DD',
+        },
+        // Texto
+        ink: {
+          DEFAULT: '#1C1C1E',   // Texto principal
+          light:   '#5C5C60',
+          muted:   '#9CA3AF',
+        },
+        // Categorías de eventos
+        categoria: {
+          cultural:     '#7C3AED',
+          deportivo:    '#1D4ED8',
+          turistico:    '#0D9488',
+          gastronomico: '#EA580C',
+          otro:         '#374151',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans:    ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Playfair Display', 'Georgia', 'serif'], // títulos de eventos
       },
-      spacing: {
-        'safe-bottom': 'env(safe-area-inset-bottom)', // iOS notch
+      backgroundImage: {
+        'hero-gradient':    'linear-gradient(135deg, #1B7A3E 0%, #166332 50%, #E8A020 100%)',
+        'card-gradient':    'linear-gradient(180deg, transparent 50%, rgba(28,28,30,0.85) 100%)',
+        'llanos-pattern':   "url('/patterns/llanos-dots.svg')",
       },
-      maxWidth: {
-        'content': '1280px',
+      boxShadow: {
+        'card':    '0 2px 8px rgba(27, 122, 62, 0.08)',
+        'card-hover': '0 8px 24px rgba(27, 122, 62, 0.18)',
+        'panel':   '0 4px 20px rgba(0,0,0,0.10)',
+      },
+      keyframes: {
+        'slide-up':   { '0%': { transform: 'translateY(100%)' }, '100%': { transform: 'translateY(0)' } },
+        'fade-in':    { '0%': { opacity: '0' },                  '100%': { opacity: '1' } },
+        'fade-scale': { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+        'bounce-dot': { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-5px)' } },
+      },
+      animation: {
+        'slide-up':   'slide-up 0.35s cubic-bezier(0.32, 0.72, 0, 1)',
+        'fade-in':    'fade-in 0.25s ease-out',
+        'fade-scale': 'fade-scale 0.2s ease-out',
+        'bounce-dot': 'bounce-dot 1s ease-in-out infinite',
       },
     },
   },
   plugins: [],
+};
+```
+
+### CSS Global (src/index.css)
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html   { font-family: 'Inter', system-ui, sans-serif; }
+  body   { background-color: #F9F5EE; color: #1C1C1E; }
+  h1,h2  { font-family: 'Playfair Display', Georgia, serif; }
+  *      { -webkit-tap-highlight-color: transparent; }
+}
+
+@layer components {
+  /* Botón primario reutilizable */
+  .btn-primary {
+    @apply bg-primary text-white font-semibold px-4 py-2 rounded-xl
+           hover:bg-primary-600 active:scale-95
+           transition-all duration-150 disabled:opacity-50;
+  }
+  /* Badge de categoría base */
+  .badge-categoria {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full
+           text-xs font-semibold uppercase tracking-wide text-white;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none          { scrollbar-width: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+  .text-display            { font-family: 'Playfair Display', Georgia, serif; }
+  .bg-sand                 { background-color: #F9F5EE; }
 }
 ```
 
@@ -57,403 +184,297 @@ module.exports = {
 ## 2. Estructura de Carpetas
 
 ```
-frontend/
-├── public/
-│   ├── placeholder-event.jpg
-│   └── icons/                     # PWA icons (192x192, 512x512)
-├── src/
-│   ├── main.jsx
-│   ├── App.jsx
-│   ├── index.css                  # @tailwind + fuentes + variables CSS
-│   │
-│   ├── context/
-│   │   └── AuthContext.jsx
-│   │
-│   ├── hooks/
-│   │   ├── useAuth.js
-│   │   ├── useEventos.js
-│   │   ├── useChat.js
-│   │   └── useMediaQuery.js       # Hook para detectar breakpoint activo
-│   │
-│   ├── services/
-│   │   ├── api.js
-│   │   ├── authService.js
-│   │   ├── eventosService.js
-│   │   ├── agendaService.js
-│   │   └── iaService.js
-│   │
-│   ├── components/
-│   │   ├── layout/
-│   │   │   ├── Navbar.jsx         # Con menú hamburguesa en móvil
-│   │   │   ├── MobileMenu.jsx     # Drawer lateral para móvil
-│   │   │   ├── Footer.jsx
-│   │   │   ├── PageContainer.jsx  # Wrapper con max-width y padding lateral
-│   │   │   ├── ProtectedRoute.jsx
-│   │   │   └── EmpresarioRoute.jsx
-│   │   ├── ui/
-│   │   │   ├── Button.jsx
-│   │   │   ├── Input.jsx
-│   │   │   ├── Textarea.jsx
-│   │   │   ├── Select.jsx
-│   │   │   ├── Badge.jsx
-│   │   │   ├── Modal.jsx          # Full-screen en móvil, centrado en desktop
-│   │   │   ├── Drawer.jsx         # Slide-in desde abajo en móvil
-│   │   │   ├── Spinner.jsx
-│   │   │   ├── SkeletonCard.jsx
-│   │   │   ├── EmptyState.jsx
-│   │   │   └── Toast.jsx          # Notificaciones de éxito/error
-│   │   ├── events/
-│   │   │   ├── EventCard.jsx
-│   │   │   ├── EventFilters.jsx   # Colapsable en móvil
-│   │   │   └── AgendaTimeline.jsx
-│   │   └── chat/
-│   │       ├── ChatWindow.jsx     # Panel fijo en desktop, drawer en móvil
-│   │       ├── ChatFAB.jsx        # Botón flotante para abrir chat en móvil
-│   │       ├── ChatMessage.jsx
-│   │       └── ChatInput.jsx
-│   │
-│   ├── pages/
-│   │   ├── HomePage.jsx
-│   │   ├── EventoDetailPage.jsx
-│   │   ├── LoginPage.jsx
-│   │   ├── RegisterPage.jsx
-│   │   ├── PerfilPage.jsx
-│   │   └── dashboard/
-│   │       ├── DashboardPage.jsx
-│   │       ├── EventoFormPage.jsx
-│   │       └── AgendaPage.jsx
-│   │
-│   └── utils/
-│       ├── formatDate.js
-│       ├── constants.js
-│       └── validators.js
+frontend/src/
+├── main.jsx
+├── App.jsx                          # Router + providers
+├── index.css
 │
-├── .env
-├── .env.example
-├── vite.config.js
-├── tailwind.config.js
-└── package.json
+├── context/
+│   └── AuthContext.jsx              # user, rol, login, logout, isEmpresario
+│
+├── hooks/
+│   ├── useAuth.js
+│   ├── useEventos.js
+│   ├── useChat.js
+│   ├── useEmpresa.js                # NUEVO: estado panel empresario
+│   └── useMediaQuery.js
+│
+├── services/
+│   ├── api.js                       # axios + interceptores
+│   ├── authService.js
+│   ├── eventosService.js
+│   ├── agendaService.js
+│   ├── empresaService.js            # NUEVO: /empresa/* endpoints
+│   └── iaService.js
+│
+├── components/
+│   ├── layout/
+│   │   ├── Navbar.jsx               # Adaptado: logo + links según rol
+│   │   ├── MobileMenu.jsx           # Drawer hamburguesa
+│   │   ├── Footer.jsx
+│   │   ├── PageContainer.jsx
+│   │   ├── ProtectedRoute.jsx
+│   │   └── EmpresarioRoute.jsx
+│   ├── ui/
+│   │   ├── Button.jsx
+│   │   ├── Input.jsx
+│   │   ├── Textarea.jsx
+│   │   ├── Select.jsx
+│   │   ├── Badge.jsx                # Usa colores de la paleta temática
+│   │   ├── Modal.jsx                # Bottom-sheet en móvil
+│   │   ├── Spinner.jsx
+│   │   ├── SkeletonCard.jsx
+│   │   ├── EmptyState.jsx
+│   │   └── Toast.jsx
+│   ├── events/
+│   │   ├── EventCard.jsx            # Tarjeta con gradiente de imagen
+│   │   ├── EventFilters.jsx
+│   │   └── AgendaTimeline.jsx
+│   └── chat/
+│       ├── ChatWindow.jsx           # Reutilizado: cliente y empresario
+│       ├── ChatFAB.jsx
+│       ├── ChatMessage.jsx
+│       └── ChatInput.jsx
+│
+└── pages/
+    ├── HomePage.jsx                 # Vista pública de eventos
+    ├── EventoDetailPage.jsx         # Detalle + agenda + chat cliente
+    ├── LoginPage.jsx                # Con selector de rol
+    ├── RegisterPage.jsx             # Con selector de rol
+    ├── PerfilPage.jsx
+    └── empresa/                     # NUEVO: módulo empresario
+        ├── EmpresaInicio.jsx        # ¿A qué evento perteneces?
+        ├── EmpresaPanel.jsx         # Panel principal de gestión
+        ├── EventoForm.jsx           # Crear / editar evento
+        └── AgendaManager.jsx        # Gestión de agenda
 ```
 
 ---
 
-## 3. Layout Base — PageContainer
+## 3. Flujo de Navegación por Rol
 
-Componente wrapper que aplica el ancho máximo y padding lateral consistente en toda la app.
-
-```jsx
-// src/components/layout/PageContainer.jsx
-
-function PageContainer({ children, className = '' }) {
-  return (
-    <div className={`
-      w-full max-w-content mx-auto
-      px-4          /* 16px en móvil */
-      sm:px-4
-      md:px-6       /* 24px en tablet */
-      lg:px-8       /* 32px en desktop */
-      ${className}
-    `}>
-      {children}
-    </div>
-  );
-}
+```
+/login ──── elige rol ────────────────────────────────────────────────┐
+                                                                       │
+       rol = 'usuario'                       rol = 'empresario'        │
+             │                                       │                 │
+             ▼                                       ▼                 │
+       / (HomePage)                    /empresa/inicio                 │
+       Lista eventos                   ┌──────────────────────┐        │
+       publicados                      │ ¿Tienes un evento?   │        │
+             │                         │                       │        │
+             ▼                         │ [Seleccionar] [Crear] │        │
+       /eventos/:id                    └──────────────────────┘        │
+       Detalle + agenda                        │                       │
+       + Chat IA cliente 💬                   ▼                       │
+                                  /empresa/panel                       │
+                                  Panel de gestión del evento          │
+                                  ├─ Editar datos del evento           │
+                                  ├─ Gestionar agenda/horarios         │
+                                  ├─ Publicar / despublicar            │
+                                  └─ Chat IA empresario 💬             │
+                                                                       │
+Rutas protegidas — sin sesión → /login ◄──────────────────────────────┘
 ```
 
 ---
 
-## 4. Navbar — Diseño Responsive
-
-### Comportamiento por breakpoint
-
-| Breakpoint | Comportamiento |
-|------------|---------------|
-| Móvil (< md) | Logo izquierda + botón hamburguesa derecha. Links ocultos. |
-| Tablet (md) | Logo + links principales inline. Menú usuario con dropdown. |
-| Desktop (lg+) | Logo + todos los links + botones login/registro o menú usuario. |
+## 4. AuthContext — Diseño con Roles
 
 ```jsx
-// src/components/layout/Navbar.jsx
+// src/context/AuthContext.jsx
 
-function Navbar() {
-  const { user, logout, isEmpresario } = useAuth();
-  const [menuOpen, setMenuOpen] = useState(false);
+export function AuthProvider({ children }) {
+  const [user, setUser]       = useState(null);  // { id, nombre, email, rol }
+  const [isLoading, setIsLoading] = useState(true);
 
-  return (
-    <header className="
-      sticky top-0 z-50
-      bg-white border-b border-gray-100
-      shadow-sm
-    ">
-      <PageContainer>
-        <nav className="flex items-center justify-between h-16">
-
-          {/* Logo — siempre visible */}
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-2xl">🌿</span>
-            <span className="
-              font-bold text-primary
-              text-base      /* 16px móvil */
-              md:text-lg     /* 18px tablet+ */
-            ">
-              Casanare en Movimiento
-            </span>
-          </Link>
-
-          {/* Links — solo visible en md+ */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link to="/" className="text-sm font-medium text-neutral hover:text-primary transition-colors">
-              Inicio
-            </Link>
-            {user && isEmpresario() && (
-              <Link to="/dashboard" className="text-sm font-medium text-neutral hover:text-primary transition-colors">
-                Dashboard
-              </Link>
-            )}
-          </div>
-
-          {/* Acciones — visible en md+ */}
-          <div className="hidden md:flex items-center gap-3">
-            {!user ? (
-              <>
-                <Link to="/login">
-                  <Button variant="ghost" size="sm">Ingresar</Button>
-                </Link>
-                <Link to="/register">
-                  <Button variant="primary" size="sm">Registrarse</Button>
-                </Link>
-              </>
-            ) : (
-              <div className="flex items-center gap-3">
-                <Link to="/perfil" className="text-sm text-neutral hover:text-primary">
-                  👤 {user.nombre?.split(' ')[0]}
-                </Link>
-                <Button variant="ghost" size="sm" onClick={logout}>
-                  Salir
-                </Button>
-              </div>
-            )}
-          </div>
-
-          {/* Botón hamburguesa — solo visible en móvil */}
-          <button
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Abrir menú"
-            aria-expanded={menuOpen}
-          >
-            {/* Icono hamburguesa */}
-            <div className="w-6 flex flex-col gap-1.5">
-              <span className="block h-0.5 bg-neutral-dark rounded" />
-              <span className="block h-0.5 bg-neutral-dark rounded" />
-              <span className="block h-0.5 bg-neutral-dark rounded" />
-            </div>
-          </button>
-        </nav>
-      </PageContainer>
-
-      {/* Drawer de menú móvil */}
-      <MobileMenu
-        isOpen={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        user={user}
-        isEmpresario={isEmpresario}
-        logout={logout}
-      />
-    </header>
-  );
-}
-```
-
-### MobileMenu — Drawer lateral
-
-```jsx
-// src/components/layout/MobileMenu.jsx
-
-function MobileMenu({ isOpen, onClose, user, isEmpresario, logout }) {
-  // Bloquear scroll del body cuando el menú está abierto
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      const payload = parseJwtPayload(token);
+      if (payload?.exp > Date.now() / 1000) {
+        setUser({ id: payload.sub, nombre: payload.nombre,
+                  email: payload.email, rol: payload.rol });
+      } else {
+        silentRefresh();
+      }
+    }
+    setIsLoading(false);
+  }, []);
+
+  const login = async (email, password) => {
+    const data = await authService.login(email, password);
+    localStorage.setItem('access_token',  data.access_token);
+    localStorage.setItem('refresh_token', data.refresh_token);
+    const payload = parseJwtPayload(data.access_token);
+    const userData = { id: payload.sub, nombre: payload.nombre,
+                       email: payload.email, rol: data.rol };
+    setUser(userData);
+    // Retorna el rol para que LoginPage sepa a dónde redirigir
+    return data.rol;
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    setUser(null);
+  };
+
+  const isEmpresario = () => user?.rol === 'empresario';
+  const isCliente    = () => user?.rol === 'usuario';
 
   return (
-    <>
-      {/* Overlay oscuro */}
-      <div
-        className={`
-          fixed inset-0 z-40 bg-black transition-opacity duration-300
-          ${isOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'}
-        `}
-        onClick={onClose}
-        aria-hidden="true"
-      />
+    <AuthContext.Provider value={{
+      user, isLoading, login, logout, isEmpresario, isCliente
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+```
 
-      {/* Panel del menú — slide desde la derecha */}
-      <div className={`
-        fixed top-0 right-0 z-50
-        h-full w-72 bg-white shadow-xl
-        transform transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : 'translate-x-full'}
-      `}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Menú de navegación"
-      >
-        {/* Header del drawer */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-100">
-          <span className="font-bold text-primary">Menú</span>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100"
-            aria-label="Cerrar menú"
-          >
-            ✕
-          </button>
+---
+
+## 5. LoginPage — Selector de Rol
+
+```jsx
+// src/pages/LoginPage.jsx
+
+function LoginPage() {
+  const { login }  = useAuth();
+  const navigate   = useNavigate();
+  const [rolSeleccionado, setRolSeleccionado] = useState(null); // 'usuario' | 'empresario'
+  const [step, setStep]  = useState('seleccion'); // 'seleccion' | 'formulario'
+  const [error, setError] = useState('');
+
+  const handleRol = (rol) => {
+    setRolSeleccionado(rol);
+    setStep('formulario');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { email, password } = formData;
+    try {
+      const rol = await login(email, password);
+      // Redirigir según rol real del backend
+      navigate(rol === 'empresario' ? '/empresa/inicio' : '/');
+    } catch {
+      setError('Credenciales incorrectas. Verifica tu email y contraseña.');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-sand flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-sm md:max-w-md bg-white rounded-2xl shadow-panel p-6 md:p-8">
+
+        {/* Logo y título */}
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-hero-gradient
+                          flex items-center justify-center text-3xl shadow-card">
+            🌿
+          </div>
+          <h1 className="text-display text-2xl font-bold text-ink">
+            Casanare en Movimiento
+          </h1>
+          <p className="text-ink-light text-sm mt-1">Inicia sesión para continuar</p>
         </div>
 
-        {/* Links de navegación */}
-        <nav className="p-4 flex flex-col gap-1">
-          <MobileNavLink to="/" onClick={onClose}>🏠 Inicio</MobileNavLink>
+        {/* PASO 1: Selector de rol */}
+        {step === 'seleccion' && (
+          <div>
+            <p className="text-center text-ink font-medium mb-5">¿Cómo ingresas hoy?</p>
+            <div className="grid grid-cols-2 gap-4">
 
-          {user ? (
-            <>
-              <MobileNavLink to="/perfil" onClick={onClose}>👤 Mi Perfil</MobileNavLink>
-              {isEmpresario() && (
-                <MobileNavLink to="/dashboard" onClick={onClose}>📊 Dashboard</MobileNavLink>
-              )}
-              <hr className="my-3 border-gray-100" />
+              {/* Tarjeta Cliente */}
               <button
-                onClick={() => { logout(); onClose(); }}
-                className="text-left w-full px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors text-sm font-medium"
+                onClick={() => handleRol('usuario')}
+                className="group flex flex-col items-center gap-3 p-5 rounded-2xl
+                           border-2 border-gray-100 hover:border-primary
+                           hover:bg-primary-50 transition-all duration-200"
               >
-                🚪 Cerrar Sesión
+                <div className="w-14 h-14 rounded-full bg-primary-50 group-hover:bg-primary-100
+                                flex items-center justify-center text-3xl transition-colors">
+                  👤
+                </div>
+                <div className="text-center">
+                  <p className="font-semibold text-ink text-sm">Soy Cliente</p>
+                  <p className="text-xs text-ink-muted mt-0.5">Explorar eventos</p>
+                </div>
               </button>
-            </>
-          ) : (
-            <>
-              <hr className="my-3 border-gray-100" />
-              <MobileNavLink to="/login" onClick={onClose} highlight>
-                Ingresar
-              </MobileNavLink>
-              <MobileNavLink to="/register" onClick={onClose} primary>
-                Registrarse
-              </MobileNavLink>
-            </>
-          )}
-        </nav>
-      </div>
-    </>
-  );
-}
 
-// Componente auxiliar para los links del menú móvil
-function MobileNavLink({ to, onClick, children, primary = false }) {
-  return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className={`
-        block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
-        ${primary
-          ? 'bg-primary text-white text-center'
-          : 'text-neutral hover:bg-gray-50'
-        }
-      `}
-    >
-      {children}
-    </Link>
-  );
-}
-```
+              {/* Tarjeta Empresario */}
+              <button
+                onClick={() => handleRol('empresario')}
+                className="group flex flex-col items-center gap-3 p-5 rounded-2xl
+                           border-2 border-gray-100 hover:border-golden
+                           hover:bg-golden-50 transition-all duration-200"
+              >
+                <div className="w-14 h-14 rounded-full bg-golden-50 group-hover:bg-golden-100
+                                flex items-center justify-center text-3xl transition-colors">
+                  🏢
+                </div>
+                <div className="text-center">
+                  <p className="font-semibold text-ink text-sm">Soy Organizador</p>
+                  <p className="text-xs text-ink-muted mt-0.5">Gestionar mi evento</p>
+                </div>
+              </button>
+            </div>
 
----
+            <p className="text-center text-sm text-ink-light mt-6">
+              ¿No tienes cuenta?{' '}
+              <Link to="/register" className="text-primary font-medium hover:underline">
+                Regístrate aquí
+              </Link>
+            </p>
+          </div>
+        )}
 
-## 5. HomePage — Diseño Responsive
+        {/* PASO 2: Formulario de credenciales */}
+        {step === 'formulario' && (
+          <form onSubmit={handleSubmit} noValidate>
+            {/* Indicador del rol seleccionado */}
+            <div className={`
+              flex items-center gap-2 mb-5 px-3 py-2 rounded-xl text-sm font-medium
+              ${rolSeleccionado === 'usuario'
+                ? 'bg-primary-50 text-primary-700'
+                : 'bg-golden-50 text-golden-600'
+              }
+            `}>
+              <span>{rolSeleccionado === 'usuario' ? '👤' : '🏢'}</span>
+              <span>
+                Ingresando como {rolSeleccionado === 'usuario' ? 'Cliente' : 'Organizador'}
+              </span>
+              <button
+                type="button"
+                onClick={() => setStep('seleccion')}
+                className="ml-auto text-xs underline opacity-70 hover:opacity-100"
+              >
+                Cambiar
+              </button>
+            </div>
 
-### Layout general
+            <div className="flex flex-col gap-4">
+              <Input label="Email" type="email" name="email" required />
+              <Input label="Contraseña" type="password" name="password" required />
+            </div>
 
-```
-MÓVIL                    TABLET                   DESKTOP
-─────────────────────    ─────────────────────    ─────────────────────
-┌───────────────────┐    ┌───────────────────┐    ┌───────────────────┐
-│   HERO (stack)    │    │   HERO (stack)    │    │   HERO (stack)    │
-│  título, subtít.  │    │  título, subtít.  │    │  título, subtít.  │
-└───────────────────┘    └───────────────────┘    └───────────────────┘
-┌───────────────────┐    ┌───────────────────┐    ┌───────────────────┐
-│  FILTROS (stack)  │    │ FILTROS (3 cols)  │    │ FILTROS (4 cols)  │
-│  [buscar]         │    │[buscar][cat][mun] │    │[buscar][cat][mun] │
-└───────────────────┘    └───────────────────┘    └───────────────────┘
-┌───────────────────┐    ┌────────┐ ┌────────┐    ┌────┐ ┌────┐ ┌────┐
-│   EventCard       │    │ Card  │ │ Card  │    │Card│ │Card│ │Card│
-├───────────────────┤    └────────┘ └────────┘    └────┘ └────┘ └────┘
-│   EventCard       │    ┌────────┐ ┌────────┐    ┌────┐ ┌────┐ ┌────┐
-├───────────────────┤    │ Card  │ │ Card  │    │Card│ │Card│ │Card│
-│   EventCard       │    └────────┘ └────────┘    └────┘ └────┘ └────┘
-└───────────────────┘
-```
+            {error && (
+              <p className="text-red-600 text-sm mt-3 bg-red-50 px-3 py-2 rounded-lg">
+                {error}
+              </p>
+            )}
 
-### EventFilters — Comportamiento responsive
+            <Button type="submit" variant="primary" className="w-full mt-6">
+              Ingresar
+            </Button>
 
-```jsx
-// src/components/events/EventFilters.jsx
-
-function EventFilters({ filtros, onChange }) {
-  const [filtersOpen, setFiltersOpen] = useState(false);
-
-  return (
-    <div className="mb-6">
-      {/* Barra superior: búsqueda siempre visible + toggle de filtros en móvil */}
-      <div className="flex gap-3 items-center">
-        <Input
-          placeholder="Buscar eventos..."
-          value={filtros.busqueda}
-          onChange={(e) => onChange({ ...filtros, busqueda: e.target.value })}
-          className="flex-1"
-          icon="🔍"
-        />
-        {/* Botón "Filtros" solo en móvil */}
-        <button
-          className="md:hidden flex items-center gap-1.5 px-3 py-2 border border-gray-200 rounded-lg text-sm text-neutral bg-white"
-          onClick={() => setFiltersOpen(!filtersOpen)}
-          aria-expanded={filtersOpen}
-        >
-          🎚 Filtros
-          {(filtros.categoria || filtros.municipio) && (
-            <span className="ml-1 w-2 h-2 rounded-full bg-primary inline-block" />
-          )}
-        </button>
-      </div>
-
-      {/* Filtros adicionales:
-          - Móvil: se despliegan debajo al hacer clic en el botón
-          - md+: siempre visibles en fila */}
-      <div className={`
-        mt-3 gap-3
-        md:flex md:items-center
-        ${filtersOpen ? 'flex flex-col' : 'hidden'}
-      `}>
-        <Select
-          value={filtros.categoria}
-          onChange={(val) => onChange({ ...filtros, categoria: val })}
-          placeholder="Todas las categorías"
-          options={CATEGORIAS}
-          className="w-full md:w-48"
-        />
-        <Select
-          value={filtros.municipio}
-          onChange={(val) => onChange({ ...filtros, municipio: val })}
-          placeholder="Todos los municipios"
-          options={MUNICIPIOS}
-          className="w-full md:w-48"
-        />
-        {(filtros.categoria || filtros.municipio || filtros.busqueda) && (
-          <button
-            className="text-sm text-red-500 hover:text-red-700 px-2 py-1"
-            onClick={() => onChange({ busqueda: '', categoria: '', municipio: '' })}
-          >
-            ✕ Limpiar filtros
-          </button>
+            <p className="text-center text-sm text-ink-light mt-4">
+              ¿No tienes cuenta?{' '}
+              <Link to="/register" className="text-primary font-medium hover:underline">
+                Regístrate
+              </Link>
+            </p>
+          </form>
         )}
       </div>
     </div>
@@ -461,51 +482,535 @@ function EventFilters({ filtros, onChange }) {
 }
 ```
 
-### Grid de EventCards
+---
+
+## 6. RegisterPage — Con selector de rol
 
 ```jsx
-// En HomePage.jsx — el grid se adapta a cada breakpoint
-<div className="
-  grid gap-4
-  grid-cols-1           /* 1 columna en móvil */
-  md:grid-cols-2        /* 2 columnas en tablet */
-  lg:grid-cols-3        /* 3 columnas en desktop */
-  xl:grid-cols-3        /* 3 columnas en desktop grande */
-">
-  {eventos.map(evento => <EventCard key={evento.id} evento={evento} />)}
-</div>
+// src/pages/RegisterPage.jsx
+// Mismo patrón de LoginPage: paso 1 = selección de rol, paso 2 = formulario
+
+// En el formulario de registro se incluye:
+// <input type="hidden" name="rol" value={rolSeleccionado} />
+// Campos: nombre, email, password, confirmar password
+
+// Colores del selector:
+// rol = 'usuario'    → borde primary, icono 👤
+// rol = 'empresario' → borde golden, icono 🏢
 ```
 
-### EventCard — Diseño responsive
+---
+
+## 7. EmpresaInicio — Pantalla "¿A qué evento perteneces?"
+
+```jsx
+// src/pages/empresa/EmpresaInicio.jsx
+
+function EmpresaInicio() {
+  const { misEventos, eventoActivo, isLoading } = useEmpresa();
+  const navigate = useNavigate();
+
+  // Si ya tiene evento activo → redirigir al panel directamente
+  useEffect(() => {
+    if (eventoActivo) navigate('/empresa/panel');
+  }, [eventoActivo]);
+
+  return (
+    <div className="min-h-screen bg-sand">
+
+      {/* Header de bienvenida */}
+      <div className="bg-hero-gradient text-white py-10 px-4">
+        <PageContainer>
+          <h1 className="text-display text-2xl md:text-3xl font-bold">
+            Bienvenido, organizador 👋
+          </h1>
+          <p className="mt-2 text-white/80 text-sm md:text-base">
+            Selecciona el evento que vas a gestionar hoy
+          </p>
+        </PageContainer>
+      </div>
+
+      <PageContainer className="py-8">
+
+        {/* Botón crear nuevo evento — siempre visible arriba */}
+        <div className="mb-6">
+          <button
+            onClick={() => navigate('/empresa/evento/nuevo')}
+            className="w-full md:w-auto flex items-center justify-center gap-2
+                       bg-golden text-white font-semibold px-6 py-3 rounded-xl
+                       hover:bg-golden-500 transition-colors shadow-card"
+          >
+            ✨ Crear nuevo evento
+          </button>
+        </div>
+
+        {/* Lista de eventos existentes */}
+        {misEventos.length > 0 && (
+          <div>
+            <h2 className="text-ink font-semibold mb-3">Mis eventos anteriores</h2>
+            <div className="flex flex-col gap-3">
+              {misEventos.map(evento => (
+                <EventoSelectorCard
+                  key={evento.id}
+                  evento={evento}
+                  onSeleccionar={() => handleSeleccionar(evento.id)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Estado vacío: no tiene eventos */}
+        {misEventos.length === 0 && !isLoading && (
+          <EmptyState
+            icon="📅"
+            title="Aún no tienes eventos"
+            description="Crea tu primer evento para comenzar a gestionar tu agenda"
+          />
+        )}
+      </PageContainer>
+    </div>
+  );
+}
+
+// Tarjeta de evento en el selector
+function EventoSelectorCard({ evento, onSeleccionar }) {
+  return (
+    <button
+      onClick={onSeleccionar}
+      className="w-full flex items-center gap-4 bg-white rounded-xl p-4
+                 border-2 border-transparent hover:border-primary
+                 shadow-card hover:shadow-card-hover
+                 transition-all duration-200 text-left"
+    >
+      <div className="w-12 h-12 rounded-xl bg-primary-50 flex-shrink-0
+                      flex items-center justify-center text-xl">
+        🎪
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold text-ink text-sm truncate">{evento.titulo}</p>
+        <p className="text-xs text-ink-muted mt-0.5">
+          📅 {formatDate(evento.fecha_inicio)} · 📍 {evento.municipio}
+        </p>
+      </div>
+      <Badge estado={evento.estado} />
+      <span className="text-primary text-lg ml-1">›</span>
+    </button>
+  );
+}
+```
+
+---
+
+## 8. EmpresaPanel — Panel Principal del Organizador
+
+### Layout del panel
+
+```
+MÓVIL                              DESKTOP (lg+)
+──────────────────────────────     ────────────────────────────────────────
+┌──────────────────────────┐       ┌────────────────────────────────────┐
+│ Header: nombre evento    │       │ Sidebar        │  Contenido         │
+│ Estado + badge           │       │ (w-64)         │  principal         │
+└──────────────────────────┘       │                │                    │
+┌──────────────────────────┐       │ 📋 Datos       │  [Sección activa]  │
+│ Tabs de navegación:      │       │ 🗓 Agenda      │                    │
+│ [Datos][Agenda][Publicar]│       │ 🌐 Publicar    │                    │
+│ [Chat IA]                │       │ 💬 Chat IA     │                    │
+└──────────────────────────┘       └────────────────────────────────────┘
+┌──────────────────────────┐
+│  Sección activa          │
+│  (cambia según tab)      │
+└──────────────────────────┘
+```
+
+```jsx
+// src/pages/empresa/EmpresaPanel.jsx
+
+const TABS = [
+  { id: 'datos',   icon: '📋', label: 'Datos del evento' },
+  { id: 'agenda',  icon: '🗓', label: 'Agenda' },
+  { id: 'publicar',icon: '🌐', label: 'Publicación' },
+  { id: 'chat',    icon: '💬', label: 'Asistente IA' },
+];
+
+function EmpresaPanel() {
+  const { eventoActivo, agenda, isLoading } = useEmpresa();
+  const [tabActivo, setTabActivo] = useState('datos');
+  const isDesktop = useIsDesktop();
+
+  if (!eventoActivo) return <Redirect to="/empresa/inicio" />;
+
+  return (
+    <div className="min-h-screen bg-sand">
+
+      {/* Header del panel — nombre del evento activo */}
+      <div className="bg-white border-b border-gray-100 shadow-sm sticky top-16 z-30">
+        <PageContainer className="py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-primary flex items-center
+                              justify-center text-white text-sm flex-shrink-0">
+                🎪
+              </div>
+              <div className="min-w-0">
+                <p className="font-semibold text-ink text-sm truncate">
+                  {eventoActivo.titulo}
+                </p>
+                <p className="text-xs text-ink-muted">
+                  Panel de gestión
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge estado={eventoActivo.estado} />
+              <button
+                onClick={() => navigate('/empresa/inicio')}
+                className="text-xs text-ink-muted hover:text-primary px-2 py-1 
+                           rounded-lg hover:bg-gray-50"
+              >
+                Cambiar evento
+              </button>
+            </div>
+          </div>
+        </PageContainer>
+      </div>
+
+      <PageContainer className="py-6">
+        <div className="lg:flex lg:gap-6 lg:items-start">
+
+          {/* Sidebar de navegación — visible solo en desktop */}
+          <aside className="hidden lg:flex flex-col gap-1 w-56 flex-shrink-0
+                            bg-white rounded-2xl p-3 shadow-card sticky top-36">
+            {TABS.map(tab => (
+              <SidebarTabButton
+                key={tab.id}
+                tab={tab}
+                activo={tabActivo === tab.id}
+                onClick={() => setTabActivo(tab.id)}
+              />
+            ))}
+          </aside>
+
+          {/* Contenido principal */}
+          <div className="flex-1 min-w-0">
+
+            {/* Tabs horizontales — solo en móvil/tablet */}
+            <div className="lg:hidden flex gap-1 mb-5 overflow-x-auto
+                            pb-1 scrollbar-none">
+              {TABS.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setTabActivo(tab.id)}
+                  className={`
+                    flex-shrink-0 flex items-center gap-1.5
+                    px-3 py-2 rounded-xl text-sm font-medium
+                    transition-colors whitespace-nowrap
+                    ${tabActivo === tab.id
+                      ? 'bg-primary text-white'
+                      : 'bg-white text-ink hover:bg-gray-50'
+                    }
+                  `}
+                >
+                  <span>{tab.icon}</span>
+                  <span className="hidden sm:inline">{tab.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Secciones del panel */}
+            {tabActivo === 'datos'    && <SeccionDatosEvento evento={eventoActivo} />}
+            {tabActivo === 'agenda'   && <SeccionAgenda eventoId={eventoActivo.id} />}
+            {tabActivo === 'publicar' && <SeccionPublicacion evento={eventoActivo} />}
+            {tabActivo === 'chat'     && (
+              <SeccionChatEmpresario eventoId={eventoActivo.id} titulo={eventoActivo.titulo} />
+            )}
+          </div>
+        </div>
+      </PageContainer>
+    </div>
+  );
+}
+```
+
+### SeccionDatosEvento — Formulario de edición
+```jsx
+function SeccionDatosEvento({ evento }) {
+  // Formulario pre-poblado con los datos actuales
+  // Mismo EventoForm reutilizado, pero en modo edición
+  // Al guardar: PUT /api/v1/empresa/panel/evento
+  // Feedback con Toast de éxito
+}
+```
+
+### SeccionAgenda — Gestión de actividades
+```jsx
+function SeccionAgenda({ eventoId }) {
+  // Lista de AgendaItem con acciones editar/eliminar
+  // Botón "Agregar actividad" → Modal (bottom-sheet en móvil)
+  // Orden visual cronológico con AgendaTimeline
+  // Los cambios se reflejan inmediatamente (optimistic update)
+}
+```
+
+### SeccionPublicacion — Toggle de estado
+```jsx
+function SeccionPublicacion({ evento }) {
+  const [estado, setEstado] = useState(evento.estado);
+
+  return (
+    <div className="bg-white rounded-2xl p-6 shadow-card">
+      <h2 className="text-display text-xl font-bold text-ink mb-2">
+        Visibilidad del evento
+      </h2>
+      <p className="text-ink-light text-sm mb-6">
+        Controla si tu evento es visible para el público en la plataforma.
+      </p>
+
+      {/* Card de estado actual */}
+      <div className={`
+        flex items-center justify-between p-4 rounded-xl border-2 mb-5
+        ${estado === 'publicado'
+          ? 'border-primary-200 bg-primary-50'
+          : 'border-gray-200 bg-gray-50'
+        }
+      `}>
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl
+                          ${estado === 'publicado' ? 'bg-primary text-white' : 'bg-gray-200'}`}>
+            {estado === 'publicado' ? '🌐' : '🔒'}
+          </div>
+          <div>
+            <p className="font-semibold text-ink text-sm">
+              {estado === 'publicado' ? 'Evento publicado' : 'Evento en borrador'}
+            </p>
+            <p className="text-xs text-ink-muted">
+              {estado === 'publicado'
+                ? 'Visible para todos los usuarios'
+                : 'Solo tú puedes verlo'
+              }
+            </p>
+          </div>
+        </div>
+        <Badge estado={estado} />
+      </div>
+
+      {/* Requisitos para publicar */}
+      {estado !== 'publicado' && (
+        <ChecklistPublicacion evento={evento} />
+      )}
+
+      {/* Botón principal */}
+      <Button
+        variant={estado === 'publicado' ? 'danger' : 'primary'}
+        className="w-full"
+        onClick={handleToggle}
+      >
+        {estado === 'publicado' ? '🔒 Despublicar evento' : '🌐 Publicar evento'}
+      </Button>
+    </div>
+  );
+}
+```
+
+### SeccionChatEmpresario — Chat IA del organizador
+```jsx
+function SeccionChatEmpresario({ eventoId, titulo }) {
+  // Reutiliza ChatWindow con prop rolChat="empresario"
+  // Header diferente: "🤖 Asistente de Gestión"
+  // Mensaje de bienvenida: "Hola, soy tu asistente para gestionar [Evento].
+  //   Puedo ayudarte con dudas sobre fechas, agenda, publicación y más."
+  return (
+    <div className="bg-white rounded-2xl shadow-card overflow-hidden">
+      <ChatWindow
+        eventoId={eventoId}
+        eventoTitulo={titulo}
+        rolChat="empresario"           // cambia el system prompt en el backend
+        welcomeMessage={`Hola 👋 Soy tu asistente para gestionar **${titulo}**. Pregúntame sobre fechas, agenda, publicación o lo que necesites.`}
+        headerColor="bg-golden"        // dorado para el empresario vs verde para el cliente
+        panel                          // siempre en altura completa
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## 9. EventoDetailPage — Diseño con Paleta Temática
+
+```jsx
+// src/pages/EventoDetailPage.jsx
+
+function EventoDetailPage() {
+  const { id } = useParams();
+
+  return (
+    <div className="min-h-screen bg-sand">
+
+      {/* Hero con gradiente oscuro sobre la imagen */}
+      <div className="relative w-full overflow-hidden h-56 md:h-72 lg:h-80 bg-gray-200">
+        <img
+          src={evento?.imagen_url || '/placeholder-event.jpg'}
+          alt={evento?.titulo}
+          className="w-full h-full object-cover"
+        />
+        {/* Gradiente card-gradient para legibilidad del título */}
+        <div className="absolute inset-0 bg-card-gradient" />
+        <div className="absolute bottom-4 left-4 right-4">
+          <Badge categoria={evento?.categoria} />
+          <h1 className="text-display text-xl md:text-2xl font-bold text-white mt-2
+                         drop-shadow-lg leading-tight">
+            {evento?.titulo}
+          </h1>
+        </div>
+      </div>
+
+      <PageContainer className="py-6">
+        <div className="lg:flex lg:gap-6 lg:items-start">
+
+          {/* Columna principal */}
+          <div className="flex-1 min-w-0 space-y-4">
+
+            {/* Info chips — con colores de la paleta */}
+            <div className="bg-white rounded-2xl p-5 shadow-card">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <InfoChip icon="📅" label="Fecha"    value={formatDate(evento?.fecha_inicio)}
+                          color="text-primary" />
+                <InfoChip icon="🕐" label="Hora"     value={formatTime(evento?.hora_inicio)}
+                          color="text-golden" />
+                <InfoChip icon="📍" label="Lugar"    value={evento?.ubicacion}
+                          color="text-sky" />
+                <InfoChip icon="🏙️" label="Municipio" value={evento?.municipio}
+                          color="text-earth" />
+                {evento?.aforo && (
+                  <InfoChip icon="👥" label="Aforo"  value={`${evento.aforo} personas`}
+                            color="text-ink-light" />
+                )}
+              </div>
+            </div>
+
+            {/* Descripción */}
+            <div className="bg-white rounded-2xl p-5 shadow-card">
+              <h2 className="text-display text-lg font-bold text-ink mb-3">
+                Sobre el evento
+              </h2>
+              <p className="text-ink-light text-sm leading-relaxed md:text-base">
+                {evento?.descripcion}
+              </p>
+            </div>
+
+            {/* Agenda con la paleta */}
+            <div className="bg-white rounded-2xl p-5 shadow-card">
+              <h2 className="text-display text-lg font-bold text-ink mb-4">
+                Programación
+              </h2>
+              <AgendaTimeline items={agenda} accentColor="primary" />
+            </div>
+
+            {/* Chat inline — móvil */}
+            <div className="block lg:hidden">
+              <ChatWindow eventoId={id} eventoTitulo={evento?.titulo}
+                          rolChat="cliente" />
+            </div>
+          </div>
+
+          {/* Panel chat — desktop */}
+          <div className="hidden lg:block w-96 flex-shrink-0 sticky top-20 self-start">
+            <ChatWindow eventoId={id} eventoTitulo={evento?.titulo}
+                        rolChat="cliente" panel
+                        headerColor="bg-primary" />
+          </div>
+        </div>
+      </PageContainer>
+
+      {/* FAB chat — móvil */}
+      <ChatFAB className="lg:hidden" color="bg-primary" />
+    </div>
+  );
+}
+```
+
+---
+
+## 10. Badge — Componente con Paleta Temática
+
+```jsx
+// src/components/ui/Badge.jsx
+
+const CATEGORIA_CONFIG = {
+  cultural:     { label: 'Cultural',      bg: 'bg-purple-600',  icon: '🎭' },
+  deportivo:    { label: 'Deportivo',     bg: 'bg-blue-700',    icon: '⚽' },
+  turistico:    { label: 'Turístico',     bg: 'bg-teal-600',    icon: '🌿' },
+  gastronomico: { label: 'Gastronómico',  bg: 'bg-orange-600',  icon: '🍽️' },
+  otro:         { label: 'Otro',          bg: 'bg-gray-600',    icon: '📌' },
+};
+
+const ESTADO_CONFIG = {
+  publicado:  { label: 'Publicado',  bg: 'bg-primary',     dot: 'bg-green-300' },
+  borrador:   { label: 'Borrador',   bg: 'bg-golden',      dot: 'bg-yellow-200' },
+  cancelado:  { label: 'Cancelado',  bg: 'bg-red-600',     dot: '' },
+};
+
+function Badge({ categoria, estado, size = 'sm' }) {
+  if (categoria) {
+    const cfg = CATEGORIA_CONFIG[categoria] || CATEGORIA_CONFIG.otro;
+    return (
+      <span className={`badge-categoria ${cfg.bg} ${size === 'lg' ? 'text-sm px-3 py-1.5' : ''}`}>
+        <span className="mr-1">{cfg.icon}</span>
+        {cfg.label}
+      </span>
+    );
+  }
+
+  if (estado) {
+    const cfg = ESTADO_CONFIG[estado] || ESTADO_CONFIG.borrador;
+    return (
+      <span className={`
+        inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full
+        text-xs font-semibold text-white ${cfg.bg}
+      `}>
+        {cfg.dot && <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot} animate-pulse`} />}
+        {cfg.label}
+      </span>
+    );
+  }
+
+  return null;
+}
+```
+
+---
+
+## 11. EventCard — Con Paleta Temática
 
 ```jsx
 // src/components/events/EventCard.jsx
-
 function EventCard({ evento }) {
   return (
     <article className="
-      bg-white rounded-xl overflow-hidden
-      border border-gray-100
-      shadow-sm hover:shadow-md
-      transition-all duration-200
-      flex flex-col              /* columna en móvil */
-      md:flex-col               /* columna en tablet+ también */
-      h-full                    /* altura completa para grid uniforme */
+      bg-white rounded-2xl overflow-hidden
+      border border-sand-dark
+      shadow-card hover:shadow-card-hover
+      transition-all duration-200 flex flex-col h-full
     ">
-      {/* Imagen */}
-      <div className="relative overflow-hidden">
+      {/* Imagen con gradiente superpuesto */}
+      <div className="relative overflow-hidden flex-shrink-0">
         <img
           src={evento.imagen_url || '/placeholder-event.jpg'}
           alt={evento.titulo}
-          className="
-            w-full object-cover
-            h-44          /* altura fija móvil */
-            md:h-48       /* altura fija tablet */
-            lg:h-52       /* altura fija desktop */
-          "
           loading="lazy"
+          className="w-full object-cover h-44 md:h-48 lg:h-52"
         />
-        {/* Badge de categoría superpuesto en la imagen */}
+        {/* Capa de color según categoría con opacidad baja */}
+        <div className={`
+          absolute inset-0 opacity-20
+          ${evento.categoria === 'cultural'     ? 'bg-purple-600' : ''}
+          ${evento.categoria === 'deportivo'    ? 'bg-blue-700' : ''}
+          ${evento.categoria === 'turistico'    ? 'bg-teal-600' : ''}
+          ${evento.categoria === 'gastronomico' ? 'bg-orange-600' : ''}
+        `} />
+        {/* Badge en esquina superior */}
         <div className="absolute top-3 left-3">
           <Badge categoria={evento.categoria} />
         </div>
@@ -513,40 +1018,28 @@ function EventCard({ evento }) {
 
       {/* Contenido */}
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="
-          font-bold text-neutral-dark leading-snug
-          text-base       /* 16px móvil */
-          lg:text-lg      /* 18px desktop */
-          line-clamp-2
-        ">
+        <h3 className="text-display font-bold text-ink text-base lg:text-lg
+                       line-clamp-2 leading-snug">
           {evento.titulo}
         </h3>
-
-        <div className="mt-2 flex flex-col gap-1">
-          <p className="text-xs text-neutral-light flex items-center gap-1">
-            📅 <span>{formatDate(evento.fecha_inicio)}</span>
+        <div className="mt-2 space-y-1">
+          <p className="text-xs text-ink-muted flex items-center gap-1.5">
+            <span className="text-golden">📅</span>
+            {formatDate(evento.fecha_inicio)}
           </p>
-          <p className="text-xs text-neutral-light flex items-center gap-1">
-            📍 <span className="truncate">{evento.municipio || evento.ubicacion}</span>
+          <p className="text-xs text-ink-muted flex items-center gap-1.5">
+            <span className="text-primary">📍</span>
+            <span className="truncate">{evento.municipio || evento.ubicacion}</span>
           </p>
         </div>
-
-        <p className="mt-2 text-sm text-neutral line-clamp-2 flex-1">
+        <p className="text-sm text-ink-light mt-2 line-clamp-2 flex-1">
           {evento.descripcion}
         </p>
-
-        {/* CTA — siempre al final de la card */}
         <Link
           to={`/eventos/${evento.id}`}
-          className="
-            mt-4 block text-center
-            bg-primary hover:bg-primary-dark
-            text-white font-medium rounded-lg
-            py-2 text-sm
-            transition-colors duration-150
-          "
+          className="mt-4 block text-center btn-primary"
         >
-          Ver detalle
+          Ver detalle →
         </Link>
       </div>
     </article>
@@ -556,384 +1049,78 @@ function EventCard({ evento }) {
 
 ---
 
-## 6. EventoDetailPage — Diseño Responsive
-
-### Layout por breakpoint
-
-```
-MÓVIL                         DESKTOP (lg+)
-──────────────────────────    ──────────────────────────────────────
-┌──────────────────────────┐  ┌──────────────────────────────────┐
-│  Imagen hero (16:9)      │  │  Imagen hero (21:9)              │
-└──────────────────────────┘  └──────────────────────────────────┘
-┌──────────────────────────┐  ┌────────────────┐ ┌──────────────┐
-│  Título + badges          │  │                │ │  CHAT PANEL  │
-│  Fecha / hora / lugar     │  │  Info evento   │ │  (sticky)    │
-│  Aforo                    │  │  Descripción   │ │              │
-│  Descripción              │  │  Agenda        │ │  Fijo en     │
-│  Agenda                   │  │                │ │  el costado  │
-│                           │  │                │ │  derecho     │
-│  [Chat flotante FAB] 💬   │  └────────────────┘ └──────────────┘
-└──────────────────────────┘
-```
-
-```jsx
-// src/pages/EventoDetailPage.jsx
-
-function EventoDetailPage() {
-  const { id } = useParams();
-  const [evento, setEvento] = useState(null);
-  const [agenda, setAgenda] = useState([]);
-  const [chatOpen, setChatOpen] = useState(false);   // solo móvil
-  const { user } = useAuth();
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-
-      {/* Imagen hero */}
-      <div className="w-full overflow-hidden bg-gray-200">
-        <img
-          src={evento?.imagen_url || '/placeholder-event.jpg'}
-          alt={evento?.titulo}
-          className="
-            w-full object-cover
-            h-56          /* 224px móvil */
-            md:h-72       /* 288px tablet */
-            lg:h-80       /* 320px desktop */
-          "
-        />
-      </div>
-
-      <PageContainer className="py-6">
-        {/* Layout de dos columnas en desktop */}
-        <div className="
-          flex flex-col gap-6
-          lg:flex-row
-          lg:items-start
-        ">
-
-          {/* Columna principal — izquierda en desktop */}
-          <div className="flex-1 min-w-0">
-
-            {/* Encabezado del evento */}
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <div className="flex flex-wrap gap-2 mb-3">
-                <Badge categoria={evento?.categoria} />
-                <StatusBadge estado={evento?.estado} />
-              </div>
-
-              <h1 className="
-                font-bold text-neutral-dark
-                text-xl        /* móvil */
-                md:text-2xl    /* tablet */
-                lg:text-3xl    /* desktop */
-              ">
-                {evento?.titulo}
-              </h1>
-
-              {/* Info rápida: fecha, lugar, aforo */}
-              <div className="
-                mt-4 grid gap-3
-                grid-cols-1         /* stack en móvil */
-                sm:grid-cols-2      /* 2 cols en sm */
-                lg:grid-cols-3      /* 3 cols en desktop */
-              ">
-                <InfoChip icon="📅" label="Fecha" value={formatDate(evento?.fecha_inicio)} />
-                <InfoChip icon="🕐" label="Hora" value={formatTime(evento?.hora_inicio)} />
-                <InfoChip icon="📍" label="Lugar" value={evento?.ubicacion} />
-                <InfoChip icon="🏙️" label="Municipio" value={evento?.municipio} />
-                {evento?.aforo && (
-                  <InfoChip icon="👥" label="Aforo" value={`${evento.aforo} personas`} />
-                )}
-              </div>
-            </div>
-
-            {/* Descripción */}
-            <div className="bg-white rounded-xl p-5 shadow-sm mt-4">
-              <h2 className="font-bold text-lg text-neutral-dark mb-3">Sobre el evento</h2>
-              <p className="text-neutral text-sm leading-relaxed md:text-base">
-                {evento?.descripcion}
-              </p>
-            </div>
-
-            {/* Agenda */}
-            <div className="bg-white rounded-xl p-5 shadow-sm mt-4">
-              <h2 className="font-bold text-lg text-neutral-dark mb-4">Programación</h2>
-              {agenda.length > 0
-                ? <AgendaTimeline items={agenda} />
-                : <p className="text-neutral-light text-sm">Programación próximamente.</p>
-              }
-            </div>
-
-            {/* Chat en móvil/tablet — se muestra inline debajo de la agenda
-                en desktop se muestra en el panel lateral */}
-            <div className="block lg:hidden mt-4">
-              <ChatSection eventoId={id} eventoTitulo={evento?.titulo} />
-            </div>
-          </div>
-
-          {/* Panel lateral del chat — solo visible en desktop (lg+) */}
-          <div className="
-            hidden lg:block
-            w-full lg:w-96 xl:w-[420px]
-            flex-shrink-0
-            sticky top-20          /* queda fijo al hacer scroll */
-            self-start
-            max-h-[calc(100vh-6rem)]
-          ">
-            <ChatSection eventoId={id} eventoTitulo={evento?.titulo} panel />
-          </div>
-        </div>
-      </PageContainer>
-
-      {/* Botón flotante del chat — solo en móvil/tablet cuando el chat inline está fuera de vista */}
-      {user && (
-        <ChatFAB
-          onClick={() => setChatOpen(true)}
-          className="lg:hidden"
-        />
-      )}
-    </div>
-  );
-}
-```
-
----
-
-## 7. Chat IA — Diseño Responsive
-
-### ChatFAB — Botón flotante (solo móvil)
-
-```jsx
-// src/components/chat/ChatFAB.jsx
-function ChatFAB({ onClick, className = '' }) {
-  return (
-    <button
-      onClick={onClick}
-      aria-label="Abrir asistente IA"
-      className={`
-        fixed bottom-6 right-4
-        z-30
-        bg-primary hover:bg-primary-dark
-        text-white
-        w-14 h-14 rounded-full
-        shadow-lg hover:shadow-xl
-        flex items-center justify-center
-        text-2xl
-        transition-all duration-200
-        active:scale-95
-        pb-safe-bottom          /* seguro para iPhone con notch */
-        ${className}
-      `}
-    >
-      💬
-    </button>
-  );
-}
-```
-
-### ChatWindow — Panel fijo desktop / Drawer móvil
+## 12. ChatWindow — Diferenciado por Rol
 
 ```jsx
 // src/components/chat/ChatWindow.jsx
+// Props: eventoId, eventoTitulo, rolChat ("cliente"|"empresario"),
+//        panel, welcomeMessage, headerColor
 
-function ChatWindow({ eventoId, eventoTitulo, panel = false }) {
+function ChatWindow({
+  eventoId,
+  eventoTitulo,
+  rolChat = 'cliente',
+  panel = false,
+  welcomeMessage,
+  headerColor = 'bg-primary',
+}) {
   const { user } = useAuth();
-  const { mensajes, isLoading, enviarMensaje } = useChat(eventoId);
-  const [input, setInput] = useState('');
-  const bottomRef = useRef(null);
+  const { mensajes, isLoading, enviarMensaje } = useChat(eventoId, rolChat);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [mensajes]);
+  const defaultWelcome = rolChat === 'cliente'
+    ? `¡Hola! Soy el asistente de **${eventoTitulo}**. ¿En qué puedo ayudarte?`
+    : `Hola 👋 Soy tu asistente de gestión para **${eventoTitulo}**. Pregúntame lo que necesites.`;
 
   if (!user) {
     return (
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
+      <div className="bg-white rounded-2xl p-6 shadow-card border border-sand-dark text-center">
         <div className="text-4xl mb-3">🤖</div>
-        <h3 className="font-bold text-neutral-dark mb-2">Asistente IA</h3>
-        <p className="text-sm text-neutral mb-4">
-          ¿Tienes dudas sobre este evento? Nuestro asistente puede ayudarte.
+        <h3 className="font-bold text-ink mb-2">Asistente IA</h3>
+        <p className="text-sm text-ink-light mb-4">
+          Inicia sesión para chatear con el asistente del evento
         </p>
-        <Link to="/login" className="
-          block bg-primary text-white text-sm font-medium
-          py-2.5 px-5 rounded-lg text-center
-          hover:bg-primary-dark transition-colors
-        ">
-          Iniciar sesión para chatear
+        <Link to="/login" className="btn-primary block text-center">
+          Iniciar sesión
         </Link>
       </div>
     );
   }
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
-    await enviarMensaje(input.trim());
-    setInput('');
-  };
-
   return (
     <div className={`
-      bg-white rounded-xl shadow-sm border border-gray-100
-      flex flex-col overflow-hidden
-      ${panel
-        ? 'h-[calc(100vh-7rem)]'   /* altura fija en panel desktop */
-        : 'h-[420px] md:h-[500px]' /* altura fija en móvil/inline */
-      }
+      bg-white rounded-2xl shadow-card overflow-hidden flex flex-col
+      ${panel ? 'h-[calc(100vh-8rem)]' : 'h-[420px] md:h-[480px]'}
     `}>
-      {/* Header del chat */}
-      <div className="
-        flex items-center gap-3 px-4 py-3
-        bg-primary text-white
-        flex-shrink-0
-      ">
+      {/* Header — color según rol */}
+      <div className={`${headerColor} text-white flex items-center gap-3 px-4 py-3 flex-shrink-0`}>
         <span className="text-xl">🤖</span>
         <div className="min-w-0">
-          <p className="font-medium text-sm">Asistente</p>
-          <p className="text-xs opacity-80 truncate">{eventoTitulo}</p>
+          <p className="font-semibold text-sm">
+            {rolChat === 'empresario' ? 'Asistente de Gestión' : 'Asistente'}
+          </p>
+          <p className="text-xs opacity-75 truncate">{eventoTitulo}</p>
         </div>
-        <div className="ml-auto flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
-          <span className="text-xs opacity-80">En línea</span>
+        <div className="ml-auto flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-white/60 animate-pulse" />
+          <span className="text-xs opacity-75">En línea</span>
         </div>
       </div>
 
-      {/* Área de mensajes — scrolleable */}
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
-        {/* Mensaje de bienvenida */}
-        <ChatMessage
-          rol="assistant"
-          contenido={`¡Hola! Soy el asistente de **${eventoTitulo}**. ¿En qué puedo ayudarte?`}
-        />
-        {mensajes.map(m => <ChatMessage key={m.id} {...m} />)}
+      {/* Mensajes */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-sand">
+        <ChatMessage rol="assistant" contenido={welcomeMessage || defaultWelcome}
+                     accentColor={rolChat === 'empresario' ? 'golden' : 'primary'} />
+        {mensajes.map(m => (
+          <ChatMessage key={m.id} {...m}
+                       accentColor={rolChat === 'empresario' ? 'golden' : 'primary'} />
+        ))}
         {isLoading && <TypingIndicator />}
         <div ref={bottomRef} />
       </div>
 
-      {/* Input — fijo al fondo */}
-      <ChatInput
-        value={input}
-        onChange={setInput}
-        onSend={handleSend}
-        disabled={isLoading}
-      />
-    </div>
-  );
-}
-```
-
-### ChatInput — Responsive
-
-```jsx
-// src/components/chat/ChatInput.jsx
-
-function ChatInput({ value, onChange, onSend, disabled }) {
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      onSend();
-    }
-  };
-
-  return (
-    <div className="
-      flex-shrink-0
-      flex items-end gap-2
-      px-3 py-3
-      border-t border-gray-100
-      bg-white
-    ">
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Escribe tu pregunta..."
-        disabled={disabled}
-        rows={1}
-        className="
-          flex-1 resize-none
-          border border-gray-200 rounded-xl
-          px-3 py-2
-          text-sm text-neutral-dark
-          placeholder:text-neutral-light
-          focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary
-          disabled:opacity-50 disabled:bg-gray-50
-          max-h-28 overflow-y-auto
-        "
-        aria-label="Escribe tu pregunta al asistente"
-      />
-      <button
-        onClick={onSend}
-        disabled={disabled || !value.trim()}
-        aria-label="Enviar mensaje"
-        className="
-          flex-shrink-0
-          w-9 h-9 rounded-full
-          bg-primary hover:bg-primary-dark
-          disabled:opacity-40 disabled:cursor-not-allowed
-          text-white flex items-center justify-center
-          transition-colors duration-150
-          active:scale-95
-        "
-      >
-        {disabled ? <Spinner size="xs" color="white" /> : '➤'}
-      </button>
-    </div>
-  );
-}
-```
-
-### ChatMessage — Burbujas
-
-```jsx
-// src/components/chat/ChatMessage.jsx
-
-function ChatMessage({ rol, contenido }) {
-  const isUser = rol === 'user';
-
-  return (
-    <div className={`flex items-end gap-2 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-      {/* Avatar */}
-      <div className={`
-        flex-shrink-0 w-7 h-7 rounded-full
-        flex items-center justify-center text-sm
-        ${isUser ? 'bg-primary/10' : 'bg-secondary/10'}
-      `}>
-        {isUser ? '👤' : '🤖'}
-      </div>
-
-      {/* Burbuja */}
-      <div className={`
-        max-w-[80%] md:max-w-[75%]
-        px-3.5 py-2.5 rounded-2xl
-        text-sm leading-relaxed
-        ${isUser
-          ? 'bg-primary text-white rounded-br-sm'
-          : 'bg-gray-100 text-neutral-dark rounded-bl-sm'
-        }
-      `}>
-        {contenido}
-      </div>
-    </div>
-  );
-}
-
-// Indicador de escritura (3 puntos animados)
-function TypingIndicator() {
-  return (
-    <div className="flex items-end gap-2">
-      <div className="w-7 h-7 rounded-full bg-secondary/10 flex items-center justify-center text-sm flex-shrink-0">
-        🤖
-      </div>
-      <div className="bg-gray-100 rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1 items-center">
-        {[0, 1, 2].map(i => (
-          <span
-            key={i}
-            className="w-2 h-2 rounded-full bg-neutral-light animate-bounce"
-            style={{ animationDelay: `${i * 150}ms` }}
-          />
-        ))}
-      </div>
+      {/* Input */}
+      <ChatInput onSend={handleSend} disabled={isLoading}
+                 accentColor={rolChat === 'empresario' ? 'golden' : 'primary'} />
     </div>
   );
 }
@@ -941,592 +1128,69 @@ function TypingIndicator() {
 
 ---
 
-## 8. Dashboard — Diseño Responsive
-
-### Tabla → Cards en móvil
-
-En móvil, la tabla de eventos se convierte en cards apiladas para ser legible en pantalla pequeña.
+## 13. Navbar — Adaptado a Roles
 
 ```jsx
-// src/pages/dashboard/DashboardPage.jsx
+// src/components/layout/Navbar.jsx
+// Muestra links diferentes según el rol del usuario autenticado
 
-function DashboardPage() {
-  const { eventos, isLoading } = useMisEventos();
-  const isMobile = useMediaQuery('(max-width: 767px)');
+// Menú para CLIENTE (rol='usuario'):
+//   Desktop: [Inicio] [Perfil] [Cerrar sesión]
+//   Móvil:   Igual en drawer
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <PageContainer className="py-6">
+// Menú para EMPRESARIO (rol='empresario'):
+//   Desktop: [Mi Evento] → /empresa/panel  [Perfil] [Cerrar sesión]
+//   Móvil:   Igual en drawer
 
-        {/* Header */}
-        <div className="
-          flex items-center justify-between mb-6
-          flex-col gap-3       /* stack en móvil */
-          sm:flex-row          /* fila en sm+ */
-        ">
-          <h1 className="text-xl md:text-2xl font-bold text-neutral-dark self-start">
-            📊 Mis Eventos
-          </h1>
-          <Link to="/dashboard/eventos/nuevo">
-            <Button variant="primary" className="w-full sm:w-auto">
-              + Crear Evento
-            </Button>
-          </Link>
-        </div>
+// Sin sesión:
+//   Desktop: [Explorar Eventos] [Ingresar] [Registrarse]
+//   Móvil:   Igual en drawer
 
-        {/* Tabs de filtro */}
-        <div className="
-          flex gap-1 mb-4
-          overflow-x-auto
-          pb-1 scrollbar-none    /* scroll horizontal en móvil */
-        ">
-          {['Todos', 'Publicados', 'Borradores', 'Cancelados'].map(tab => (
-            <TabButton key={tab} label={tab} />
-          ))}
-        </div>
-
-        {/* Modo tabla — solo en md+ */}
-        {!isMobile ? (
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b border-gray-100">
-                  <tr>
-                    <th className="text-left px-4 py-3 font-semibold text-neutral">Evento</th>
-                    <th className="text-left px-4 py-3 font-semibold text-neutral hidden lg:table-cell">Categoría</th>
-                    <th className="text-left px-4 py-3 font-semibold text-neutral">Fecha</th>
-                    <th className="text-left px-4 py-3 font-semibold text-neutral">Estado</th>
-                    <th className="text-right px-4 py-3 font-semibold text-neutral">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {eventos.map(evento => (
-                    <EventoTableRow key={evento.id} evento={evento} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : (
-          /* Modo cards — solo en móvil */
-          <div className="flex flex-col gap-3">
-            {eventos.map(evento => (
-              <EventoMobileCard key={evento.id} evento={evento} />
-            ))}
-          </div>
-        )}
-      </PageContainer>
-    </div>
-  );
-}
+// El logo usa el gradiente hero-gradient como fondo del ícono
 ```
 
-### EventoMobileCard — Vista de evento en móvil para el Dashboard
+---
+
+## 14. Homepage — Con Paleta Temática
 
 ```jsx
-function EventoMobileCard({ evento, onEditar, onPublicar, onEliminar, onAgenda }) {
-  const [actionsOpen, setActionsOpen] = useState(false);
+// src/pages/HomePage.jsx
 
-  return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-      {/* Encabezado */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-neutral-dark text-sm line-clamp-1">
-            {evento.titulo}
-          </h3>
-          <p className="text-xs text-neutral-light mt-0.5">
-            📅 {formatDate(evento.fecha_inicio)} · 📍 {evento.municipio}
-          </p>
-        </div>
-        <Badge estado={evento.estado} />
-      </div>
+// Sección Hero:
+// Fondo: bg-hero-gradient (verde → dorado)
+// Título con fuente display: "Descubre Casanare en Movimiento"
+// Subtítulo: "Eventos culturales, deportivos y turísticos del departamento"
+// Sin botón CTA — el grid de eventos está justo abajo
 
-      {/* Acciones rápidas — siempre visibles en fila */}
-      <div className="flex gap-2 mt-3 pt-3 border-t border-gray-50">
-        <button
-          onClick={() => onEditar(evento.id)}
-          className="flex-1 flex items-center justify-center gap-1 text-xs py-1.5 rounded-lg border border-gray-200 text-neutral hover:bg-gray-50"
-        >
-          ✏️ Editar
-        </button>
-        <button
-          onClick={() => onAgenda(evento.id)}
-          className="flex-1 flex items-center justify-center gap-1 text-xs py-1.5 rounded-lg border border-gray-200 text-neutral hover:bg-gray-50"
-        >
-          📋 Agenda
-        </button>
-        <button
-          onClick={() => onPublicar(evento.id, evento.estado)}
-          className={`flex-1 flex items-center justify-center gap-1 text-xs py-1.5 rounded-lg border
-            ${evento.estado === 'publicado'
-              ? 'border-orange-200 text-orange-600 hover:bg-orange-50'
-              : 'border-primary/30 text-primary hover:bg-primary/5'
-            }`}
-        >
-          {evento.estado === 'publicado' ? '🔒 Ocultar' : '🌐 Publicar'}
-        </button>
-        <button
-          onClick={() => onEliminar(evento.id)}
-          className="w-9 flex items-center justify-center text-xs py-1.5 rounded-lg border border-red-100 text-red-500 hover:bg-red-50"
-          aria-label="Eliminar evento"
-        >
-          🗑️
-        </button>
-      </div>
-    </div>
-  );
-}
+// Grid de eventos:
+// Fondo de la página: bg-sand (#F9F5EE)
+// Cards con shadow-card y hover:shadow-card-hover
+// Skeleton con tonos de sand
+
+// Sección de categorías (opcional, encima del grid):
+// Filtros visuales tipo chips con el color de cada categoría
+// Ej: [🎭 Cultural] [⚽ Deportivo] [🌿 Turístico] [🍽 Gastronómico]
 ```
 
 ---
 
-## 9. Formulario de Evento — Diseño Responsive
+## 15. Breakpoints y Checklist Responsive
 
-```jsx
-// src/pages/dashboard/EventoFormPage.jsx — Estructura del layout
+| Breakpoint | px | Dispositivo típico |
+|-----------|----|--------------------|
+| sm (base) | 320px | iPhone SE, Galaxy A |
+| md | 768px | iPad Mini |
+| lg | 1024px | iPad Pro, laptop |
+| xl | 1280px | Desktop |
 
-function EventoFormPage() {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <PageContainer className="py-6">
+### Checklist por vista
 
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => navigate(-1)} className="text-neutral hover:text-primary p-1">
-            ← Volver
-          </button>
-          <h1 className="text-xl font-bold text-neutral-dark">
-            {isEditing ? 'Editar Evento' : 'Crear Evento'}
-          </h1>
-        </div>
-
-        {/* Formulario en tarjeta */}
-        <div className="bg-white rounded-xl shadow-sm p-5 md:p-8">
-          <form onSubmit={handleSubmit} noValidate>
-
-            {/* Grid de campos — 1 col móvil, 2 cols desktop */}
-            <div className="
-              grid gap-4
-              grid-cols-1
-              md:grid-cols-2
-            ">
-              {/* Título — ancho completo siempre */}
-              <div className="md:col-span-2">
-                <Input label="Título del evento *" name="titulo" error={errors.titulo} />
-              </div>
-
-              {/* Descripción — ancho completo siempre */}
-              <div className="md:col-span-2">
-                <Textarea label="Descripción *" name="descripcion" rows={4} error={errors.descripcion} />
-              </div>
-
-              {/* Categoría y municipio — 1 col cada uno en md */}
-              <Select label="Categoría *" name="categoria" options={CATEGORIAS} error={errors.categoria} />
-              <Input label="Municipio" name="municipio" />
-
-              {/* Fechas — siempre en fila en md */}
-              <Input label="Fecha de inicio *" type="date" name="fecha_inicio" error={errors.fecha_inicio} />
-              <Input label="Fecha de fin" type="date" name="fecha_fin" />
-
-              {/* Horas */}
-              <Input label="Hora de inicio" type="time" name="hora_inicio" />
-              <Input label="Hora de fin" type="time" name="hora_fin" />
-
-              {/* Ubicación — ancho completo */}
-              <div className="md:col-span-2">
-                <Input label="Ubicación *" name="ubicacion" placeholder="Ej: Plaza Central, Yopal" error={errors.ubicacion} />
-              </div>
-
-              {/* Aforo e imagen URL */}
-              <Input label="Aforo" type="number" name="aforo" placeholder="Capacidad máxima" />
-              <Input label="URL de imagen" name="imagen_url" placeholder="https://..." />
-            </div>
-
-            {/* Botones de acción */}
-            <div className="
-              flex gap-3 mt-8
-              flex-col          /* stack en móvil */
-              sm:flex-row-reverse  /* fila invertida en sm+ */
-            ">
-              <Button
-                type="submit"
-                variant="primary"
-                loading={isSaving === 'publicar'}
-                onClick={() => setSaveMode('publicar')}
-                className="w-full sm:w-auto"
-              >
-                Guardar y publicar
-              </Button>
-              <Button
-                type="submit"
-                variant="secondary"
-                loading={isSaving === 'borrador'}
-                onClick={() => setSaveMode('borrador')}
-                className="w-full sm:w-auto"
-              >
-                Guardar borrador
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => navigate(-1)}
-                className="w-full sm:w-auto"
-              >
-                Cancelar
-              </Button>
-            </div>
-          </form>
-        </div>
-      </PageContainer>
-    </div>
-  );
-}
-```
-
----
-
-## 10. Modal — Responsive (full-screen en móvil)
-
-```jsx
-// src/components/ui/Modal.jsx
-
-function Modal({ isOpen, onClose, title, children, size = 'md' }) {
-  useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
-  const sizeClasses = {
-    sm:  'max-w-sm',
-    md:  'max-w-md',
-    lg:  'max-w-lg',
-    xl:  'max-w-xl',
-  };
-
-  return createPortal(
-    <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-    >
-      {/* Overlay */}
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Panel del modal */}
-      <div className={`
-        relative bg-white z-10 w-full shadow-xl
-        /* Móvil: ocupa toda la pantalla desde abajo (sheet) */
-        rounded-t-2xl
-        /* sm+: centrado con bordes redondeados */
-        sm:rounded-2xl sm:${sizeClasses[size]}
-        /* Animación */
-        animate-slide-up sm:animate-fade-scale
-      `}>
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-gray-100">
-          {/* Handle para swipe en móvil */}
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-gray-200 sm:hidden" />
-          <h2 id="modal-title" className="font-bold text-neutral-dark mt-2 sm:mt-0">{title}</h2>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-neutral-light text-lg"
-            aria-label="Cerrar"
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* Contenido */}
-        <div className="p-5 overflow-y-auto max-h-[75vh] sm:max-h-[70vh]">
-          {children}
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
-}
-```
-
----
-
-## 11. Hook useMediaQuery
-
-```javascript
-// src/hooks/useMediaQuery.js
-
-import { useState, useEffect } from 'react';
-
-export function useMediaQuery(query) {
-  const [matches, setMatches] = useState(
-    () => window.matchMedia(query).matches
-  );
-
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const handler = (e) => setMatches(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, [query]);
-
-  return matches;
-}
-
-// Helpers pre-definidos
-export const useIsMobile  = () => useMediaQuery('(max-width: 767px)');
-export const useIsTablet  = () => useMediaQuery('(min-width: 768px) and (max-width: 1023px)');
-export const useIsDesktop = () => useMediaQuery('(min-width: 1024px)');
-```
-
----
-
-## 12. Páginas de Auth — Responsive (Login y Registro)
-
-```jsx
-// Patrón compartido para LoginPage y RegisterPage
-
-function AuthPageLayout({ title, subtitle, children }) {
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
-      <div className="
-        w-full bg-white rounded-2xl shadow-sm border border-gray-100
-        p-6          /* 24px móvil */
-        md:p-8       /* 32px tablet+ */
-        max-w-sm     /* ancho máximo del formulario */
-        md:max-w-md
-      ">
-        {/* Logo */}
-        <div className="text-center mb-6">
-          <span className="text-4xl">🌿</span>
-          <h1 className="text-xl font-bold text-neutral-dark mt-2">{title}</h1>
-          <p className="text-sm text-neutral-light mt-1">{subtitle}</p>
-        </div>
-
-        {children}
-      </div>
-    </div>
-  );
-}
-```
-
----
-
-## 13. AgendaTimeline — Responsive
-
-```jsx
-// src/components/events/AgendaTimeline.jsx
-
-function AgendaTimeline({ items }) {
-  return (
-    <ol className="relative">
-      {items.map((item, index) => (
-        <li key={item.id} className="
-          flex gap-4 pb-6
-          last:pb-0
-        ">
-          {/* Línea vertical + dot */}
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="w-3 h-3 rounded-full bg-primary mt-1 ring-4 ring-primary/10 flex-shrink-0" />
-            {index < items.length - 1 && (
-              <div className="w-0.5 bg-gray-200 flex-1 mt-1" />
-            )}
-          </div>
-
-          {/* Contenido del item */}
-          <div className="flex-1 min-w-0 pb-2">
-            {/* Hora */}
-            <p className="text-xs font-mono font-semibold text-primary mb-1">
-              {item.hora_inicio}
-              {item.hora_fin && ` — ${item.hora_fin}`}
-            </p>
-
-            {/* Título */}
-            <h4 className="
-              font-semibold text-neutral-dark
-              text-sm md:text-base
-            ">
-              {item.titulo_actividad}
-            </h4>
-
-            {/* Ponente */}
-            {item.ponente && (
-              <p className="text-xs text-neutral-light mt-0.5 flex items-center gap-1">
-                🎤 {item.ponente}
-              </p>
-            )}
-
-            {/* Descripción expandible */}
-            {item.descripcion && (
-              <details className="mt-1">
-                <summary className="text-xs text-primary cursor-pointer hover:underline select-none">
-                  Ver detalle
-                </summary>
-                <p className="text-sm text-neutral mt-1 leading-relaxed">
-                  {item.descripcion}
-                </p>
-              </details>
-            )}
-          </div>
-        </li>
-      ))}
-    </ol>
-  );
-}
-```
-
----
-
-## 14. Footer — Responsive
-
-```jsx
-// src/components/layout/Footer.jsx
-
-function Footer() {
-  return (
-    <footer className="bg-neutral-dark text-white mt-16">
-      <PageContainer className="py-8 md:py-10">
-        <div className="
-          grid gap-8
-          grid-cols-1
-          md:grid-cols-3
-        ">
-          {/* Marca */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-2xl">🌿</span>
-              <span className="font-bold text-lg">Casanare en Movimiento</span>
-            </div>
-            <p className="text-sm text-gray-400 leading-relaxed">
-              La plataforma oficial de eventos culturales, deportivos y turísticos del departamento de Casanare.
-            </p>
-          </div>
-
-          {/* Links */}
-          <div>
-            <h3 className="font-semibold mb-3 text-sm uppercase tracking-wide text-gray-300">
-              Navegación
-            </h3>
-            <ul className="flex flex-col gap-2 text-sm text-gray-400">
-              <li><Link to="/" className="hover:text-white transition-colors">Inicio</Link></li>
-              <li><Link to="/login" className="hover:text-white transition-colors">Ingresar</Link></li>
-              <li><Link to="/register" className="hover:text-white transition-colors">Registrarse</Link></li>
-            </ul>
-          </div>
-
-          {/* Hackathon */}
-          <div>
-            <h3 className="font-semibold mb-3 text-sm uppercase tracking-wide text-gray-300">
-              Proyecto
-            </h3>
-            <p className="text-sm text-gray-400">
-              Desarrollado en el Simulacro de Hackathon 02<br />
-              Casanare — 2026
-            </p>
-          </div>
-        </div>
-
-        {/* Línea inferior */}
-        <div className="
-          mt-8 pt-6 border-t border-gray-700
-          flex flex-col gap-2 items-center text-center
-          md:flex-row md:justify-between
-        ">
-          <p className="text-xs text-gray-500">
-            © 2026 Casanare en Movimiento. Todos los derechos reservados.
-          </p>
-          <p className="text-xs text-gray-500">
-            Hecho con ❤️ en Casanare, Colombia
-          </p>
-        </div>
-      </PageContainer>
-    </footer>
-  );
-}
-```
-
----
-
-## 15. Paleta de Colores y Sistema de Diseño
-
-```javascript
-// tailwind.config.js — configuración completa
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        primary:   { DEFAULT: '#16A34A', light: '#22C55E', dark: '#15803D' },
-        secondary: { DEFAULT: '#D97706', light: '#F59E0B', dark: '#B45309' },
-        neutral:   { DEFAULT: '#374151', light: '#9CA3AF', dark: '#111827' },
-      },
-      keyframes: {
-        'slide-up': {
-          '0%':   { transform: 'translateY(100%)' },
-          '100%': { transform: 'translateY(0)' },
-        },
-        'fade-scale': {
-          '0%':   { opacity: '0', transform: 'scale(0.95)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
-        },
-        bounce: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%':       { transform: 'translateY(-4px)' },
-        },
-      },
-      animation: {
-        'slide-up':   'slide-up 0.3s ease-out',
-        'fade-scale': 'fade-scale 0.2s ease-out',
-      },
-    },
-  },
-}
-```
-
-### Variables CSS globales (`src/index.css`)
-
-```css
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  html { font-family: 'Inter', system-ui, sans-serif; }
-  * { -webkit-tap-highlight-color: transparent; } /* quitar highlight táctil en iOS */
-}
-
-@layer utilities {
-  .scrollbar-none::-webkit-scrollbar { display: none; }
-  .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-}
-```
-
----
-
-## 16. Checklist Responsive por Vista
-
-| Vista | 320px ✓ | 768px ✓ | 1024px ✓ |
-|-------|---------|---------|----------|
-| Navbar | Hamburguesa + drawer | Links inline | Links inline + acciones |
-| HomePage | 1 col cards | 2 cols cards | 3 cols cards |
-| EventFilters | Búsqueda + toggle | 3 cols inline | 4 cols inline |
-| EventoDetail | Stack completo | Stack completo | 2 cols (info + chat) |
-| AgendaTimeline | Timeline vertical | Timeline vertical | Timeline vertical |
-| ChatWindow | Inline o drawer | Inline | Panel lateral sticky |
-| DashboardPage | Cards apiladas | Tabla completa | Tabla completa |
-| EventoFormPage | 1 col, botones stack | 2 cols, botones fila | 2 cols, botones fila |
-| Modal | Bottom sheet | Centrado | Centrado |
-| LoginPage | Card full-width | Card max-sm | Card max-md |
-| Footer | Stack 1 col | 3 cols | 3 cols |
+| Vista | 320px | 768px | 1024px |
+|-------|-------|-------|--------|
+| LoginPage — selector de rol | Grid 2 cols centrado | Ídem más grande | Tarjeta max-md centrada |
+| EmpresaInicio | Botón crear full, lista cards | Ídem | Ídem con max-w |
+| EmpresaPanel | Tabs horizontales scroll | Tabs inline | Sidebar + contenido |
+| EventoDetailPage | Stack: img→info→agenda→chat | Stack | 2 cols: contenido + chat |
+| HomePage | 1 col cards | 2 cols | 3 cols |
+| ChatWindow | 420px altura inline | 480px inline | Panel sticky altura viewport |
+| Badge categoría | Texto + icono | Ídem | Ídem |
